@@ -42,3 +42,23 @@ app.get('/', (req, res) => {
     res.render('index.ejs', {quotes: result})
   })
 })
+
+app.use(express.static('public'))
+
+app.use(bodyParser.json())
+
+app.put('/quotes', (req, res) => {
+  db.collection('quotes')
+  .findOneAndUpdate({quote: 'dd'}, {
+    $set: {
+      name: req.body.name,
+      quote: req.body.quote
+    }
+  }, {
+    sort: {_id: -1},
+    upsert: true
+  }, (err, result) => {
+    if (err) return res.send(err)
+    res.send(result)
+  })
+})
